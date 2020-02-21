@@ -11880,10 +11880,10 @@ $( document ).ready(function(){
 
 
 
-<div id="699f5603-78e6-43b2-84e0-d165e019fc3a"></div>
+<div id="95f05ad0-7c35-4975-b06c-cabab8b329f2"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#699f5603-78e6-43b2-84e0-d165e019fc3a');
+var element = $('#95f05ad0-7c35-4975-b06c-cabab8b329f2');
 require(['mycustomization'], function (mycustomization) {});  // loads mycustomization.js
 </script>
 </div>
@@ -15233,6 +15233,45 @@ Test score:  0.854
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[100]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Solution</span>
+<span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>  <span class="c1"># To silence warnings</span>
+
+<span class="c1"># Load Data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;regression-lab-data-noisy.csv&#39;</span><span class="p">)</span>
+<span class="n">original_featureset</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">original_featureset</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Fit Model</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;onehot&#39;</span><span class="p">,</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">categorical_features</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">()),</span>
+<span class="p">])</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Evaluate Model</span>
+<span class="n">train_score</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">test_score</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="c1"># Print Results</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;INTERCEPT: </span><span class="si">{pipeline.named_steps[&#39;model&#39;].intercept_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;COEFFICIENTS: </span><span class="si">{pipeline.named_steps[&#39;model&#39;].coef_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Train score: </span><span class="si">{train_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Test score:  </span><span class="si">{test_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -15240,14 +15279,27 @@ Test score:  0.854
 
 <div class="output_area">
 
-<div class="prompt"> </div>
+<div class="prompt"></div>
+
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>INTERCEPT: 3.5644454521532425
-COEFFICIENTS: [-0.18006967  0.14857424  0.03149543 ...  0.08037998 -0.00288402
- -0.30185085]
-Train score: 1.000
-Test score:  -0.328
+<pre>INTERCEPT: 3.9222284624614225
+COEFFICIENTS: [-4.28037041e-01  3.47535405e-01  8.05016356e-02 -2.04271240e+00
+ -1.39694213e+00 -4.28037041e-01  1.35447209e-14  5.77315973e-15
+ -1.71596933e+00 -9.21898626e-01  3.47535405e-01 -3.88578059e-15
+  8.54668452e-01  1.15314113e-01  8.05016356e-02 -1.18141153e+00
+ -5.90357612e-01  4.73940167e+00  1.25231340e+00  9.20134476e-01
+ -4.28037041e-01  2.01948392e-28  0.00000000e+00 -1.71596933e+00
+ -9.21898626e-01 -6.31088724e-30  0.00000000e+00  0.00000000e+00
+  0.00000000e+00  0.00000000e+00  0.00000000e+00  0.00000000e+00
+  2.97436479e+00  1.43788654e+00  4.44831435e-01  3.47535405e-01
+  0.00000000e+00  8.54668452e-01  1.15314113e-01  0.00000000e+00
+  0.00000000e+00  0.00000000e+00  6.17550505e-02 -2.10653204e+00
+  1.70153048e-01  8.05016356e-02 -1.18141153e+00 -5.90357612e-01
+  1.70328183e+00  1.92095889e+00  3.05149993e-01 -2.69542937e+00
+ -4.60414672e+00 -1.00305071e-01 -5.73422478e-02]
+Train score: 0.997
+Test score:  0.963
 </pre>
 </div>
 </div>
@@ -15976,7 +16028,7 @@ Train score: 1.000
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[78]:</div>
+<div class="prompt input_prompt">In&nbsp;[102]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
@@ -16013,7 +16065,7 @@ Train score: 1.000
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[79]:</div>
+<div class="prompt input_prompt">In&nbsp;[105]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Train and Evaluate Model without Feature Selection</span>
@@ -16025,7 +16077,7 @@ Train score: 1.000
 <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;No selection    : </span><span class="si">{train_score:.3f}</span><span class="s2"> / </span><span class="si">{test_score:.3f}</span><span class="s2">  &quot;</span> <span class="o">+</span> <span class="s2">&quot;X&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot; (30 informative + 50 noisy)&quot;</span><span class="p">)</span>
 
 <span class="c1"># Define Selectors</span>
-<span class="n">n_features</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">selectors</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">SelectKBest</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="n">n_features</span><span class="p">),</span>
 <span class="p">]</span>
@@ -16075,10 +16127,10 @@ Train score: 1.000
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>                  train /  test  SELECTED INFORMATIVE FEATURES
 No selection    : 0.849 / 0.617  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX (30 informative + 50 noisy)
-SelectKBest     : 0.828 / 0.691  XXXXXXXXXXXXXXXXXX..XXXXXXXXXX (28 informative + 32 noisy)
+SelectKBest     : 0.783 / 0.730  XXXXXXXX..X.XX......XXXXXXXXX. (20 informative + 0 noisy)
 
 X_train.shape:          (284, 80)
-X_train_selected.shape: (284, 60)
+X_train_selected.shape: (284, 20)
 </pre>
 </div>
 </div>
@@ -16114,6 +16166,672 @@ X_train_selected.shape: (284, 60)
 </pre></div>
 
 </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Inception"><strong>Inception</strong><a class="anchor-link" href="#Inception">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Python version: 3.6.4
+Universe has been successfully imported.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Cross-Validation">Cross Validation<a class="anchor-link" href="#Cross-Validation">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Why-80%-/-20%-for-train/test?">Why 80% / 20% for train/test?<a class="anchor-link" href="#Why-80%-/-20%-for-train/test?">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>99% / 1%  =&gt; high variance</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>1%  / 99% =&gt; high bias</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Cross Validation let us ensure that our evaluation has both low bias AND low variance.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Idea-of-Cross-Validation">Idea of Cross Validation<a class="anchor-link" href="#Idea-of-Cross-Validation">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://user-images.githubusercontent.com/1645996/67005800-bd8eb700-f0e3-11e9-91a4-11e93453a183.png" alt="image"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Cross-Validation-Strategies">Cross Validation Strategies<a class="anchor-link" href="#Cross-Validation-Strategies">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="k-Fold-Cross-Validation">k-Fold Cross Validation<a class="anchor-link" href="#k-Fold-Cross-Validation">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">])</span>
+<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train set     test set&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">train_set</span><span class="p">,</span> <span class="n">test_set</span> <span class="ow">in</span> <span class="n">kf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{train_set}</span><span class="s2"> </span><span class="si">{test_set}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Train set     test set
+[3 4 5 6 7 8] [0 1 2]
+[0 1 2 6 7 8] [3 4 5]
+[0 1 2 3 4 5] [6 7 8]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Stratified-k-Fold-Cross-Validation">Stratified k-Fold Cross Validation<a class="anchor-link" href="#Stratified-k-Fold-Cross-Validation">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"> </div>
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_200_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Train set     test set&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">train_set</span><span class="p">,</span> <span class="n">test_set</span> <span class="ow">in</span> <span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{train_set}</span><span class="s2"> </span><span class="si">{test_set}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Train set     test set
+[2 3 6 7 8 9] [0 1 4 5]
+[0 1 3 4 5 8 9] [2 6 7]
+[0 1 2 4 5 6 7] [3 8 9]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Group-K-Fold">Group K-Fold<a class="anchor-link" href="#Group-K-Fold">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+<span class="n">X</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># index:  0  1  2  3  4  5  6  7  8  9</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;K-FOLD&quot;</span><span class="p">)</span>
+<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">train_set</span><span class="p">,</span> <span class="n">test_set</span> <span class="ow">in</span> <span class="n">kf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{train_set}</span><span class="s2"> </span><span class="si">{test_set}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">GROUP K-FOLD&quot;</span><span class="p">)</span>
+<span class="n">gkf</span> <span class="o">=</span> <span class="n">GroupKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">train_set</span><span class="p">,</span> <span class="n">test_set</span> <span class="ow">in</span> <span class="n">gkf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{train_set}</span><span class="s2"> </span><span class="si">{test_set}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>K-FOLD
+[4 5 6 7 8 9] [0 1 2 3]
+[0 1 2 3 7 8 9] [4 5 6]
+[0 1 2 3 4 5 6] [7 8 9]
+
+GROUP K-FOLD
+[0 1 2 6 7 9] [3 4 5 8]
+[3 4 5 6 7 8 9] [0 1 2]
+[0 1 2 3 4 5 8] [6 7 9]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Time-Series-Split">Time Series Split<a class="anchor-link" href="#Time-Series-Split">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">cv</span> <span class="o">=</span> <span class="n">TimeSeriesSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> 
+<span class="k">for</span> <span class="n">train_set</span><span class="p">,</span> <span class="n">test_set</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{train_set}</span><span class="s2"> </span><span class="si">{test_set}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[0 1 2] [3 4 5]
+[0 1 2 3 4 5] [6 7 8]
+[0 1 2 3 4 5 6 7 8] [ 9 10 11]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Grid-Search">Grid Search<a class="anchor-link" href="#Grid-Search">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Idea-of-Grid-Search">Idea of Grid Search<a class="anchor-link" href="#Idea-of-Grid-Search">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://user-images.githubusercontent.com/1645996/68968102-0a98a280-07e2-11ea-811d-661b4d0fa86c.png" alt="image"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Usage">Usage<a class="anchor-link" href="#Usage">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[108]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;model__n_neighbors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+    <span class="s1">&#39;poly__degree&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="p">}</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">KNeighborsClassifier</span><span class="p">()),</span>
+<span class="p">])</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">pipeline</span><span class="p">,</span> 
+    <span class="n">param_grid</span><span class="p">,</span> 
+    <span class="n">cv</span><span class="o">=</span><span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+    <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">iid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">gs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Grid-Search-Outputs">Grid Search Outputs<a class="anchor-link" href="#Grid-Search-Outputs">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[109]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;BEST PARAMS: </span><span class="si">{gs.best_params_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;VALIDATION SCORE: </span><span class="si">{gs.best_score_}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;model__n_neighbors&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;n_neighbors = </span><span class="si">{n_neighbors}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">named_steps</span><span class="p">[</span><span class="s1">&#39;poly&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">n_output_features_</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;OUTPUT FEATURES: </span><span class="si">{n}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">gs</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> <span class="o">==</span> <span class="n">gs</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>BEST PARAMS: {&#39;model__n_neighbors&#39;: 4, &#39;poly__degree&#39;: 1}
+VALIDATION SCORE: 0.5905138339920949
+n_neighbors = 4
+OUTPUT FEATURES: 4
+True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="GridSearch.cvresults">GridSearch.cv<em>results</em><a class="anchor-link" href="#GridSearch.cvresults">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">gs</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>mean_fit_time</th>
+      <td>0.00106659</td>
+      <td>0.00074439</td>
+      <td>0.00130987</td>
+    </tr>
+    <tr>
+      <th>mean_score_time</th>
+      <td>0.00146742</td>
+      <td>0.000961018</td>
+      <td>0.0012074</td>
+    </tr>
+    <tr>
+      <th>mean_test_score</th>
+      <td>0.563636</td>
+      <td>0.564032</td>
+      <td>0.518182</td>
+    </tr>
+    <tr>
+      <th>mean_train_score</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>param_model__n_neighbors</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>param_poly__degree</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>params</th>
+      <td>{'model__n_neighbors': 1, 'poly__degree': 1}</td>
+      <td>{'model__n_neighbors': 1, 'poly__degree': 2}</td>
+      <td>{'model__n_neighbors': 1, 'poly__degree': 3}</td>
+    </tr>
+    <tr>
+      <th>rank_test_score</th>
+      <td>5</td>
+      <td>4</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>split0_test_score</th>
+      <td>0.521739</td>
+      <td>0.478261</td>
+      <td>0.521739</td>
+    </tr>
+    <tr>
+      <th>split0_train_score</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>split1_test_score</th>
+      <td>0.478261</td>
+      <td>0.478261</td>
+      <td>0.478261</td>
+    </tr>
+    <tr>
+      <th>split1_train_score</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>split2_test_score</th>
+      <td>0.545455</td>
+      <td>0.5</td>
+      <td>0.363636</td>
+    </tr>
+    <tr>
+      <th>split2_train_score</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>split3_test_score</th>
+      <td>0.681818</td>
+      <td>0.727273</td>
+      <td>0.681818</td>
+    </tr>
+    <tr>
+      <th>split3_train_score</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>split4_test_score</th>
+      <td>0.590909</td>
+      <td>0.636364</td>
+      <td>0.545455</td>
+    </tr>
+    <tr>
+      <th>split4_train_score</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>std_fit_time</th>
+      <td>0.000432371</td>
+      <td>0.000154152</td>
+      <td>0.000797581</td>
+    </tr>
+    <tr>
+      <th>std_score_time</th>
+      <td>0.00109282</td>
+      <td>0.000235273</td>
+      <td>0.000197652</td>
+    </tr>
+    <tr>
+      <th>std_test_score</th>
+      <td>0.0694056</td>
+      <td>0.10069</td>
+      <td>0.102967</td>
+    </tr>
+    <tr>
+      <th>std_train_score</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
 </div>
 </div>
 
