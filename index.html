@@ -11880,10 +11880,10 @@ $( document ).ready(function(){
 
 
 
-<div id="95f05ad0-7c35-4975-b06c-cabab8b329f2"></div>
+<div id="57dc649f-9bfa-483f-b363-968eb8dc3949"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#95f05ad0-7c35-4975-b06c-cabab8b329f2');
+var element = $('#57dc649f-9bfa-483f-b363-968eb8dc3949');
 require(['mycustomization'], function (mycustomization) {});  // loads mycustomization.js
 </script>
 </div>
@@ -15312,6 +15312,43 @@ Test score:  0.963
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Grid-Search">Grid Search<a class="anchor-link" href="#Grid-Search">&#182;</a></h2><p>Put the pipeline in a GridSearchCV and find optimal value for <code>degree</code> parameter in an automated way.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"> </div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>INTERCEPT: 3.0458896606575863
+COEFFICIENTS: [-1.00081669e+00  1.15488311e+00 -1.54066420e-01  1.03752181e+00
+ -9.38017244e-01 -1.00081669e+00 -6.55935208e-16 -1.24991272e-16
+  4.75744774e-01 -4.79473997e-01  1.15488311e+00  0.00000000e+00
+  3.53422700e-01 -7.55868165e-01 -1.54066420e-01  2.08354336e-01
+  2.97324918e-01 -4.00756753e-01 -3.49322903e+00  1.12969761e+00]
+BEST PARAMS: {&#39;poly__degree&#39;: 2}
+Test score: 0.886
+Final evaluation score:  0.954
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Feature-Engineering-&amp;-Selection"><strong>Feature Engineering &amp; Selection</strong><a class="anchor-link" href="#Feature-Engineering-&amp;-Selection">&#182;</a></h1>
 </div>
 </div>
@@ -15981,7 +16018,7 @@ Train score: 1.000
 
 
 <div class="output_png output_subarea ">
-<img src="2020-02-20-ml_files/2020-02-20-ml_176_0.png"
+<img src="2020-02-20-ml_files/2020-02-20-ml_178_0.png"
 >
 </div>
 
@@ -16366,7 +16403,7 @@ Universe has been successfully imported.
 
 
 <div class="output_png output_subarea ">
-<img src="2020-02-20-ml_files/2020-02-20-ml_200_0.png"
+<img src="2020-02-20-ml_files/2020-02-20-ml_202_0.png"
 >
 </div>
 
@@ -16828,6 +16865,108 @@ True
   </tbody>
 </table>
 </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Grid-Search-Example">Grid Search Example<a class="anchor-link" href="#Grid-Search-Example">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># Load and Split Data</span>
+<span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="n">iris</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">y</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># add some noise</span>
+<span class="c1"># train set is split into train and holdout sets during cross validation</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># Define Model and Param Space</span>
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;model__n_neighbors&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">70</span><span class="p">),</span>
+<span class="p">}</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">KNeighborsClassifier</span><span class="p">())</span>
+<span class="p">])</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">pipeline</span><span class="p">,</span> 
+    <span class="n">param_grid</span><span class="p">,</span> 
+    <span class="n">cv</span><span class="o">=</span><span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+    <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">iid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">gs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Evaluate Model</span>
+<span class="n">final_score</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="c1"># Summarize</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Best params: </span><span class="si">{gs.best_params_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Test score: </span><span class="si">{gs.best_score_:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Final score:       </span><span class="si">{final_score:.8f}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Prepare data for the plot</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;param_model__n_neighbors&#39;</span><span class="p">]</span>
+<span class="n">train_scores</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_train_score&#39;</span><span class="p">]</span>
+<span class="n">test_scores</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">]</span>
+
+<span class="c1"># Plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">train_scores</span><span class="p">,</span> <span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;train set&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">test_scores</span><span class="p">,</span> <span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;test set&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;n_neighbors&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Best params: {&#39;model__n_neighbors&#39;: 28}
+Test score: 0.679
+Final score:       0.60526316
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_219_1.png"
+>
 </div>
 
 </div>
