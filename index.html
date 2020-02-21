@@ -11880,10 +11880,10 @@ $( document ).ready(function(){
 
 
 
-<div id="57dc649f-9bfa-483f-b363-968eb8dc3949"></div>
+<div id="f08e0b3f-56aa-4433-a1ad-931abfee089c"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#57dc649f-9bfa-483f-b363-968eb8dc3949');
+var element = $('#f08e0b3f-56aa-4433-a1ad-931abfee089c');
 require(['mycustomization'], function (mycustomization) {});  // loads mycustomization.js
 </script>
 </div>
@@ -15318,6 +15318,56 @@ Test score:  0.963
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[110]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Solution</span>
+<span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>  <span class="c1"># To silence warnings</span>
+
+<span class="c1"># Load Data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;regression-lab-data-noisy.csv&#39;</span><span class="p">)</span>
+<span class="n">original_featureset</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">original_featureset</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Fit Model</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;onehot&#39;</span><span class="p">,</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">categorical_features</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span> <span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">include_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">()),</span>
+<span class="p">])</span>
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;poly__degree&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>    
+<span class="p">}</span>                       
+<span class="n">gs</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">pipeline</span><span class="p">,</span>
+    <span class="n">param_grid</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+    <span class="n">iid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">gs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Evaluate Model</span>
+<span class="n">test_score</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">best_score_</span>
+<span class="n">final_score</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="c1"># Print Results</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;INTERCEPT: </span><span class="si">{gs.best_estimator_.named_steps[&#39;model&#39;].intercept_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;COEFFICIENTS: </span><span class="si">{gs.best_estimator_.named_steps[&#39;model&#39;].coef_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;BEST PARAMS: </span><span class="si">{gs.best_params_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Test score: </span><span class="si">{test_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Final evaluation score:  </span><span class="si">{final_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -15325,7 +15375,8 @@ Test score:  0.963
 
 <div class="output_area">
 
-<div class="prompt"> </div>
+<div class="prompt"></div>
+
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>INTERCEPT: 3.0458896606575863
@@ -15339,6 +15390,94 @@ Test score: 0.886
 Final evaluation score:  0.954
 </pre>
 </div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-Persistence">Model Persistence<a class="anchor-link" href="#Model-Persistence">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Saving">Saving<a class="anchor-link" href="#Saving">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[112]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;model.model&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">gs</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Loading">Loading<a class="anchor-link" href="#Loading">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[113]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+<span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;model.model&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[114]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[114]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([0.06480651, 4.69147218, 1.98929037, 0.35971522, 4.62590384,
+       5.55167464, 0.12810021, 1.16455893, 2.49774765])</pre>
+</div>
+
 </div>
 
 </div>
@@ -16018,7 +16157,7 @@ Train score: 1.000
 
 
 <div class="output_png output_subarea ">
-<img src="2020-02-20-ml_files/2020-02-20-ml_178_0.png"
+<img src="2020-02-20-ml_files/2020-02-20-ml_184_0.png"
 >
 </div>
 
@@ -16403,7 +16542,7 @@ Universe has been successfully imported.
 
 
 <div class="output_png output_subarea ">
-<img src="2020-02-20-ml_files/2020-02-20-ml_202_0.png"
+<img src="2020-02-20-ml_files/2020-02-20-ml_208_0.png"
 >
 </div>
 
@@ -16965,12 +17104,1408 @@ Final score:       0.60526316
 
 
 <div class="output_png output_subarea ">
-<img src="2020-02-20-ml_files/2020-02-20-ml_219_1.png"
+<img src="2020-02-20-ml_files/2020-02-20-ml_225_1.png"
 >
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Models"><strong>Models</strong><a class="anchor-link" href="#Models">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="K-Nearest-Neighbors">K-Nearest Neighbors<a class="anchor-link" href="#K-Nearest-Neighbors">&#182;</a></h2><p><a href="http://scikit-learn.org/stable/modules/neighbors.html">Scikit-learn Documentation on K-Nearest Neighbors Algorithm</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="k-Parameter">k Parameter<a class="anchor-link" href="#k-Parameter">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># Load Data</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mglearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">make_forge</span><span class="p">()</span>
+<span class="n">y</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;X[:5] = </span><span class="si">{X[:5]}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;y = </span><span class="si">{y}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Train/Test Set Split</span>
+<span class="n">forge_X_train</span><span class="p">,</span> <span class="n">forge_X_test</span><span class="p">,</span> <span class="n">forge_y_train</span><span class="p">,</span> <span class="n">forge_y_test</span> <span class="o">=</span> \
+    <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Train Models and Plot Figures</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    
+    <span class="c1"># Train Model</span>
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">forge_X_train</span><span class="p">,</span> <span class="n">forge_y_train</span><span class="p">)</span>
+
+    <span class="c1"># Plot Figure</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">])</span>
+    <span class="n">mglearn</span><span class="o">.</span><span class="n">plots</span><span class="o">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">forge_X_train</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">forge_X_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">forge_X_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">forge_y_train</span><span class="p">,</span> 
+                <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;</span><span class="si">{k}</span><span class="s2"> neighbor(s)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>X[:5] = [[ 9.96346605  4.59676542]
+ [11.0329545  -0.16816717]
+ [11.54155807  5.21116083]
+ [ 8.69289001  1.54322016]
+ [ 8.1062269   4.28695977]]
+y = [1 0 1 0 0 1 1 1 1 1 1 1 0 0 1 1 1 0 0 1 0 0 0 0 1 0]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_229_1.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="kNN-for-Regression">kNN for Regression<a class="anchor-link" href="#kNN-for-Regression">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://user-images.githubusercontent.com/1645996/43990790-bdd7438a-9d60-11e8-8af8-40dc96e7f417.png" alt="">
+<img src="https://user-images.githubusercontent.com/1645996/43990796-dc49911a-9d60-11e8-818c-41a334dd1ae9.png" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Linear-&amp;-Logistic-Regression">Linear &amp; Logistic Regression<a class="anchor-link" href="#Linear-&amp;-Logistic-Regression">&#182;</a></h2><p>Linear Regression and Logistic Regression (which indeed is a Classification problem) were introduced in previous modules.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Ridge-Regularization">Ridge Regularization<a class="anchor-link" href="#Ridge-Regularization">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Cost-function">Cost function<a class="anchor-link" href="#Cost-function">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Cost function ($k$ features, $n$ samples):</p>
+<p>$$ \underset{w_1,\dots,w_k,b}{min\,} \frac{1}{2n} \sum\limits_{i}^{n} (y_\textit{prediction} - y_\textit{ground truth})^2 + \alpha (w_1^2 + \dots + w_k^2 + b^2) $$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Regularization-and-Parameters">Regularization and Parameters<a class="anchor-link" href="#Regularization-and-Parameters">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># Load and Split Data</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">()</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;feature_names&#39;</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Train Model and Compute Results</span>
+<span class="k">def</span> <span class="nf">compute_coefs</span><span class="p">(</span><span class="n">alpha</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>
+<span class="n">compute_coefs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">compute_coefs</span><span class="p">,</span> <span class="n">signature</span><span class="o">=</span><span class="s1">&#39;()-&gt;(n)&#39;</span><span class="p">)</span>
+    
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">coefs</span> <span class="o">=</span> <span class="n">compute_coefs</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot Figure</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">coefs</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;alpha&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;absolute value of weights (coefficients)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_238_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Neural-Networks">Neural Networks<a class="anchor-link" href="#Neural-Networks">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Neuron">Neuron<a class="anchor-link" href="#Neuron">&#182;</a></h3><p><img src="https://www.learnopencv.com/wp-content/uploads/2017/10/neuron-diagram.jpg" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Neural-Network">Neural Network<a class="anchor-link" href="#Neural-Network">&#182;</a></h3><p><img src="https://www.learnopencv.com/wp-content/uploads/2017/10/mlp-diagram.jpg" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Activation-Functions">Activation Functions<a class="anchor-link" href="#Activation-Functions">&#182;</a></h3><p><img src="https://www.learnopencv.com/wp-content/uploads/2017/10/sigmoid.png" alt="">
+<img src="https://www.learnopencv.com/wp-content/uploads/2017/10/tanh.png" alt="">
+<img src="https://www.learnopencv.com/wp-content/uploads/2017/10/relu.png" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Number-of-Neurons">Number of Neurons<a class="anchor-link" href="#Number-of-Neurons">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Toy Dataset</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># </span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">]:</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> 
+                        <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+    <span class="n">mlp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;n = </span><span class="si">{n}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="o">.</span><span class="n">plots</span><span class="o">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="o">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_244_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Regularization">Regularization<a class="anchor-link" href="#Regularization">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]):</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">mlp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="o">.</span><span class="n">plots</span><span class="o">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="o">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;alpha = </span><span class="si">{alpha}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_246_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Randomness">Randomness<a class="anchor-link" href="#Randomness">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+                        <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span>
+    <span class="n">mlp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="o">.</span><span class="n">plots</span><span class="o">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="o">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_248_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Decision-Trees">Decision Trees<a class="anchor-link" href="#Decision-Trees">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Decision-Tree-Building---Divide-and-Conquer">Decision Tree Building - Divide and Conquer<a class="anchor-link" href="#Decision-Tree-Building---Divide-and-Conquer">&#182;</a></h3><p><img src="https://user-images.githubusercontent.com/1645996/44005504-ce3b87a8-9e74-11e8-86da-ef2024961638.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/1645996/44005494-bfce83aa-9e74-11e8-9ba8-4a96b149644b.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/1645996/44005506-d948f770-9e74-11e8-809e-c4d4c180e875.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/1645996/44005508-e5c4a940-9e74-11e8-8ebd-171946d6dd26.png" alt="image"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Controlling-Tree-Complexity">Controlling Tree Complexity<a class="anchor-link" href="#Controlling-Tree-Complexity">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+<span class="n">cancer</span> <span class="o">=</span> <span class="n">load_breast_cancer</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">cancer</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">cancer</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">cancer</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">training_score</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">test_score</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WITHOUT PRE-PRUNNING&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Accuracy on training set: </span><span class="si">{training_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Accuracy on test set: </span><span class="si">{test_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">tree</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">training_score</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">test_score</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WITH PRE-PRUNNING&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Accuracy on training set: </span><span class="si">{training_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Accuracy on test set: </span><span class="si">{test_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>WITHOUT PRE-PRUNNING
+Accuracy on training set: 1.000
+Accuracy on test set: 0.937
+
+WITH PRE-PRUNNING
+Accuracy on training set: 0.958
+Accuracy on test set: 0.909
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Decision-Tree-for-Regression">Decision Tree for Regression<a class="anchor-link" href="#Decision-Tree-for-Regression">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[116]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mglearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">make_wave</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[117]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Exercise: Plot the Figure</span>
+<span class="c1"># Hint:</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">i = 1</span>
+<span class="sd">for max_depth in [1, 2, 3, 4]:</span>
+<span class="sd">    for min_samples_leaf in [0.001, 0.1, 0.5]:</span>
+<span class="sd">        plt.subplot(4, 3, i)</span>
+<span class="sd">        tree = DecisionTreeRegressor(</span>
+<span class="sd">            max_depth=max_depth, </span>
+<span class="sd">            min_samples_leaf=min_samples_leaf)</span>
+<span class="sd">        ...</span>
+<span class="sd">        i += 1</span>
+<span class="sd">plt.show()</span>
+<span class="sd">&#39;&#39;&#39;</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"> </div>
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_256_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Random-Forests">Random Forests<a class="anchor-link" href="#Random-Forests">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Random-Forests">Random Forests<a class="anchor-link" href="#Random-Forests">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[122]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_moons</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">n_estimators</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">]:</span>
+    <span class="n">forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="n">n_estimators</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;n_estimators = </span><span class="si">{n_estimators}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="o">.</span><span class="n">plots</span><span class="o">.</span><span class="n">plot_2d_separator</span><span class="p">(</span><span class="n">forest</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">alpha</span><span class="o">=.</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">mglearn</span><span class="o">.</span><span class="n">discrete_scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_259_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_leaf_nodes</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">tree1</span><span class="p">,</span> <span class="n">tree2</span><span class="p">,</span> <span class="n">tree3</span> <span class="o">=</span> <span class="n">forest</span><span class="o">.</span><span class="n">estimators_</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">display_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">):</span>
+    <span class="n">dot_data</span> <span class="o">=</span> <span class="n">export_graphviz</span><span class="p">(</span>
+        <span class="n">tree</span><span class="p">,</span> <span class="n">out_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="n">feature_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> 
+        <span class="n">filled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">impurity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">dot_data</span><span class="p">))</span>
+
+<span class="n">display_tree</span><span class="p">(</span><span class="n">tree1</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;X[0]&#39;</span><span class="p">,</span> <span class="s1">&#39;X[1]&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+<div class="output_svg output_subarea ">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: Tree Pages: 1 -->
+<svg width="300pt" height="216pt"
+ viewBox="0.00 0.00 300.00 216.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 212)">
+<title>Tree</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-212 296,-212 296,4 -4,4"/>
+<!-- 0 -->
+<g id="node1" class="node">
+<title>0</title>
+<polygon fill="#e58139" fill-opacity="0.305882" stroke="#000000" points="197.5381,-208 92.4619,-208 92.4619,-158 197.5381,-158 197.5381,-208"/>
+<text text-anchor="middle" x="145" y="-192.8" font-family="Times,serif" font-size="14.00" fill="#000000">X[1] &lt;= 0.06</text>
+<text text-anchor="middle" x="145" y="-178.8" font-family="Times,serif" font-size="14.00" fill="#000000">samples = 59</text>
+<text text-anchor="middle" x="145" y="-164.8" font-family="Times,serif" font-size="14.00" fill="#000000">value = [59, 41]</text>
+</g>
+<!-- 1 -->
+<g id="node2" class="node">
+<title>1</title>
+<polygon fill="#399de5" fill-opacity="0.937255" stroke="#000000" points="137.8884,-122 36.1116,-122 36.1116,-72 137.8884,-72 137.8884,-122"/>
+<text text-anchor="middle" x="87" y="-106.8" font-family="Times,serif" font-size="14.00" fill="#000000">X[0] &lt;= &#45;0.418</text>
+<text text-anchor="middle" x="87" y="-92.8" font-family="Times,serif" font-size="14.00" fill="#000000">21</text>
+<text text-anchor="middle" x="87" y="-78.8" font-family="Times,serif" font-size="14.00" fill="#000000">[2, 32]</text>
+</g>
+<!-- 0&#45;&gt;1 -->
+<g id="edge1" class="edge">
+<title>0&#45;&gt;1</title>
+<path fill="none" stroke="#000000" d="M127.9118,-157.6623C122.1889,-149.1767 115.717,-139.5803 109.6374,-130.5658"/>
+<polygon fill="#000000" stroke="#000000" points="112.4593,-128.4903 103.9661,-122.1566 106.6558,-132.4043 112.4593,-128.4903"/>
+<text text-anchor="middle" x="99.1943" y="-142.497" font-family="Times,serif" font-size="14.00" fill="#000000">True</text>
+</g>
+<!-- 2 -->
+<g id="node5" class="node">
+<title>2</title>
+<polygon fill="#e58139" fill-opacity="0.843137" stroke="#000000" points="252.226,-122 155.774,-122 155.774,-72 252.226,-72 252.226,-122"/>
+<text text-anchor="middle" x="204" y="-106.8" font-family="Times,serif" font-size="14.00" fill="#000000">X[0] &lt;= 1.196</text>
+<text text-anchor="middle" x="204" y="-92.8" font-family="Times,serif" font-size="14.00" fill="#000000">38</text>
+<text text-anchor="middle" x="204" y="-78.8" font-family="Times,serif" font-size="14.00" fill="#000000">[57, 9]</text>
+</g>
+<!-- 0&#45;&gt;2 -->
+<g id="edge4" class="edge">
+<title>0&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M162.3828,-157.6623C168.2044,-149.1767 174.7879,-139.5803 180.9723,-130.5658"/>
+<polygon fill="#000000" stroke="#000000" points="183.9703,-132.3826 186.7414,-122.1566 178.1981,-128.4226 183.9703,-132.3826"/>
+<text text-anchor="middle" x="191.3179" y="-142.5341" font-family="Times,serif" font-size="14.00" fill="#000000">False</text>
+</g>
+<!-- 3 -->
+<g id="node3" class="node">
+<title>3</title>
+<polygon fill="#e58139" stroke="#000000" points="54,-36 0,-36 0,0 54,0 54,-36"/>
+<text text-anchor="middle" x="27" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">1</text>
+<text text-anchor="middle" x="27" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[2, 0]</text>
+</g>
+<!-- 1&#45;&gt;3 -->
+<g id="edge2" class="edge">
+<title>1&#45;&gt;3</title>
+<path fill="none" stroke="#000000" d="M67.6854,-71.5691C61.0394,-62.8185 53.5886,-53.0083 46.8971,-44.1978"/>
+<polygon fill="#000000" stroke="#000000" points="49.6008,-41.9709 40.7652,-36.1242 44.0263,-46.2047 49.6008,-41.9709"/>
+</g>
+<!-- 4 -->
+<g id="node4" class="node">
+<title>4</title>
+<polygon fill="#399de5" stroke="#000000" points="126,-36 72,-36 72,0 126,0 126,-36"/>
+<text text-anchor="middle" x="99" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">20</text>
+<text text-anchor="middle" x="99" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[0, 32]</text>
+</g>
+<!-- 1&#45;&gt;4 -->
+<g id="edge3" class="edge">
+<title>1&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M90.8629,-71.5691C92.0962,-63.45 93.468,-54.4187 94.7286,-46.1201"/>
+<polygon fill="#000000" stroke="#000000" points="98.2054,-46.5364 96.247,-36.1242 91.2848,-45.4851 98.2054,-46.5364"/>
+</g>
+<!-- 5 -->
+<g id="node6" class="node">
+<title>5</title>
+<polygon fill="#e58139" fill-opacity="0.874510" stroke="#000000" points="220,-36 166,-36 166,0 220,0 220,-36"/>
+<text text-anchor="middle" x="193" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">35</text>
+<text text-anchor="middle" x="193" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[56, 7]</text>
+</g>
+<!-- 2&#45;&gt;5 -->
+<g id="edge5" class="edge">
+<title>2&#45;&gt;5</title>
+<path fill="none" stroke="#000000" d="M200.459,-71.5691C199.3285,-63.45 198.071,-54.4187 196.9155,-46.1201"/>
+<polygon fill="#000000" stroke="#000000" points="200.3694,-45.5459 195.5236,-36.1242 193.4363,-46.5114 200.3694,-45.5459"/>
+</g>
+<!-- 6 -->
+<g id="node7" class="node">
+<title>6</title>
+<polygon fill="#399de5" fill-opacity="0.498039" stroke="#000000" points="292,-36 238,-36 238,0 292,0 292,-36"/>
+<text text-anchor="middle" x="265" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">3</text>
+<text text-anchor="middle" x="265" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[1, 2]</text>
+</g>
+<!-- 2&#45;&gt;6 -->
+<g id="edge6" class="edge">
+<title>2&#45;&gt;6</title>
+<path fill="none" stroke="#000000" d="M223.6366,-71.5691C230.3933,-62.8185 237.9682,-53.0083 244.7713,-44.1978"/>
+<polygon fill="#000000" stroke="#000000" points="247.664,-46.1784 251.0054,-36.1242 242.1234,-41.9002 247.664,-46.1784"/>
+</g>
+</g>
+</svg>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display_tree</span><span class="p">(</span><span class="n">tree2</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;X[0]&#39;</span><span class="p">,</span> <span class="s1">&#39;X[1]&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+<div class="output_svg output_subarea ">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: Tree Pages: 1 -->
+<svg width="200pt" height="302pt"
+ viewBox="0.00 0.00 200.00 302.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 298)">
+<title>Tree</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-298 196,-298 196,4 -4,4"/>
+<!-- 0 -->
+<g id="node1" class="node">
+<title>0</title>
+<polygon fill="transparent" stroke="#000000" points="125.5381,-294 20.4619,-294 20.4619,-244 125.5381,-244 125.5381,-294"/>
+<text text-anchor="middle" x="73" y="-278.8" font-family="Times,serif" font-size="14.00" fill="#000000">X[0] &lt;= &#45;0.254</text>
+<text text-anchor="middle" x="73" y="-264.8" font-family="Times,serif" font-size="14.00" fill="#000000">samples = 63</text>
+<text text-anchor="middle" x="73" y="-250.8" font-family="Times,serif" font-size="14.00" fill="#000000">value = [50, 50]</text>
+</g>
+<!-- 1 -->
+<g id="node2" class="node">
+<title>1</title>
+<polygon fill="#e58139" fill-opacity="0.964706" stroke="#000000" points="54,-201 0,-201 0,-165 54,-165 54,-201"/>
+<text text-anchor="middle" x="27" y="-185.8" font-family="Times,serif" font-size="14.00" fill="#000000">15</text>
+<text text-anchor="middle" x="27" y="-171.8" font-family="Times,serif" font-size="14.00" fill="#000000">[27, 1]</text>
+</g>
+<!-- 0&#45;&gt;1 -->
+<g id="edge1" class="edge">
+<title>0&#45;&gt;1</title>
+<path fill="none" stroke="#000000" d="M59.4473,-243.6623C53.79,-233.0857 47.2097,-220.7834 41.4596,-210.0331"/>
+<polygon fill="#000000" stroke="#000000" points="44.467,-208.2348 36.6641,-201.0677 38.2945,-211.5364 44.467,-208.2348"/>
+<text text-anchor="middle" x="29.4139" y="-220.7933" font-family="Times,serif" font-size="14.00" fill="#000000">True</text>
+</g>
+<!-- 2 -->
+<g id="node3" class="node">
+<title>2</title>
+<polygon fill="#399de5" fill-opacity="0.529412" stroke="#000000" points="168.226,-208 71.774,-208 71.774,-158 168.226,-158 168.226,-208"/>
+<text text-anchor="middle" x="120" y="-192.8" font-family="Times,serif" font-size="14.00" fill="#000000">X[1] &lt;= 0.679</text>
+<text text-anchor="middle" x="120" y="-178.8" font-family="Times,serif" font-size="14.00" fill="#000000">48</text>
+<text text-anchor="middle" x="120" y="-164.8" font-family="Times,serif" font-size="14.00" fill="#000000">[23, 49]</text>
+</g>
+<!-- 0&#45;&gt;2 -->
+<g id="edge2" class="edge">
+<title>0&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M86.8473,-243.6623C91.3892,-235.3516 96.5133,-225.9756 101.3508,-217.1242"/>
+<polygon fill="#000000" stroke="#000000" points="104.5272,-218.6102 106.2516,-208.1566 98.3846,-215.2532 104.5272,-218.6102"/>
+<text text-anchor="middle" x="113.2863" y="-227.9465" font-family="Times,serif" font-size="14.00" fill="#000000">False</text>
+</g>
+<!-- 3 -->
+<g id="node4" class="node">
+<title>3</title>
+<polygon fill="#399de5" fill-opacity="0.811765" stroke="#000000" points="119.726,-122 30.274,-122 30.274,-72 119.726,-72 119.726,-122"/>
+<text text-anchor="middle" x="75" y="-106.8" font-family="Times,serif" font-size="14.00" fill="#000000">X[1] &lt;= 0.09</text>
+<text text-anchor="middle" x="75" y="-92.8" font-family="Times,serif" font-size="14.00" fill="#000000">37</text>
+<text text-anchor="middle" x="75" y="-78.8" font-family="Times,serif" font-size="14.00" fill="#000000">[9, 48]</text>
+</g>
+<!-- 2&#45;&gt;3 -->
+<g id="edge3" class="edge">
+<title>2&#45;&gt;3</title>
+<path fill="none" stroke="#000000" d="M106.7419,-157.6623C102.3933,-149.3516 97.4872,-139.9756 92.8557,-131.1242"/>
+<polygon fill="#000000" stroke="#000000" points="95.9007,-129.3942 88.1633,-122.1566 89.6985,-132.6396 95.9007,-129.3942"/>
+</g>
+<!-- 4 -->
+<g id="node7" class="node">
+<title>4</title>
+<polygon fill="#e58139" fill-opacity="0.929412" stroke="#000000" points="192,-115 138,-115 138,-79 192,-79 192,-115"/>
+<text text-anchor="middle" x="165" y="-99.8" font-family="Times,serif" font-size="14.00" fill="#000000">11</text>
+<text text-anchor="middle" x="165" y="-85.8" font-family="Times,serif" font-size="14.00" fill="#000000">[14, 1]</text>
+</g>
+<!-- 2&#45;&gt;4 -->
+<g id="edge6" class="edge">
+<title>2&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M133.2581,-157.6623C138.7924,-147.0857 145.2296,-134.7834 150.8548,-124.0331"/>
+<polygon fill="#000000" stroke="#000000" points="154.0108,-125.5508 155.546,-115.0677 147.8086,-122.3054 154.0108,-125.5508"/>
+</g>
+<!-- 5 -->
+<g id="node5" class="node">
+<title>5</title>
+<polygon fill="#399de5" stroke="#000000" points="66,-36 12,-36 12,0 66,0 66,-36"/>
+<text text-anchor="middle" x="39" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">19</text>
+<text text-anchor="middle" x="39" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[0, 27]</text>
+</g>
+<!-- 3&#45;&gt;5 -->
+<g id="edge4" class="edge">
+<title>3&#45;&gt;5</title>
+<path fill="none" stroke="#000000" d="M63.4112,-71.5691C59.5881,-63.1794 55.321,-53.8156 51.4372,-45.2928"/>
+<polygon fill="#000000" stroke="#000000" points="54.5908,-43.7726 47.2591,-36.1242 48.221,-46.6753 54.5908,-43.7726"/>
+</g>
+<!-- 6 -->
+<g id="node6" class="node">
+<title>6</title>
+<polygon fill="#399de5" fill-opacity="0.572549" stroke="#000000" points="138,-36 84,-36 84,0 138,0 138,-36"/>
+<text text-anchor="middle" x="111" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">18</text>
+<text text-anchor="middle" x="111" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[9, 21]</text>
+</g>
+<!-- 3&#45;&gt;6 -->
+<g id="edge5" class="edge">
+<title>3&#45;&gt;6</title>
+<path fill="none" stroke="#000000" d="M86.5888,-71.5691C90.4119,-63.1794 94.679,-53.8156 98.5628,-45.2928"/>
+<polygon fill="#000000" stroke="#000000" points="101.779,-46.6753 102.7409,-36.1242 95.4092,-43.7726 101.779,-46.6753"/>
+</g>
+</g>
+</svg>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display_tree</span><span class="p">(</span><span class="n">tree3</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;X[0]&#39;</span><span class="p">,</span> <span class="s1">&#39;X[1]&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+<div class="output_svg output_subarea ">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: Tree Pages: 1 -->
+<svg width="300pt" height="216pt"
+ viewBox="0.00 0.00 300.00 216.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 212)">
+<title>Tree</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-212 296,-212 296,4 -4,4"/>
+<!-- 0 -->
+<g id="node1" class="node">
+<title>0</title>
+<polygon fill="#399de5" fill-opacity="0.149020" stroke="#000000" points="197.5381,-208 92.4619,-208 92.4619,-158 197.5381,-158 197.5381,-208"/>
+<text text-anchor="middle" x="145" y="-192.8" font-family="Times,serif" font-size="14.00" fill="#000000">X[1] &lt;= 0.372</text>
+<text text-anchor="middle" x="145" y="-178.8" font-family="Times,serif" font-size="14.00" fill="#000000">samples = 65</text>
+<text text-anchor="middle" x="145" y="-164.8" font-family="Times,serif" font-size="14.00" fill="#000000">value = [46, 54]</text>
+</g>
+<!-- 1 -->
+<g id="node2" class="node">
+<title>1</title>
+<polygon fill="#399de5" fill-opacity="0.831373" stroke="#000000" points="137.8884,-122 36.1116,-122 36.1116,-72 137.8884,-72 137.8884,-122"/>
+<text text-anchor="middle" x="87" y="-106.8" font-family="Times,serif" font-size="14.00" fill="#000000">X[0] &lt;= &#45;0.418</text>
+<text text-anchor="middle" x="87" y="-92.8" font-family="Times,serif" font-size="14.00" fill="#000000">36</text>
+<text text-anchor="middle" x="87" y="-78.8" font-family="Times,serif" font-size="14.00" fill="#000000">[8, 47]</text>
+</g>
+<!-- 0&#45;&gt;1 -->
+<g id="edge1" class="edge">
+<title>0&#45;&gt;1</title>
+<path fill="none" stroke="#000000" d="M127.9118,-157.6623C122.1889,-149.1767 115.717,-139.5803 109.6374,-130.5658"/>
+<polygon fill="#000000" stroke="#000000" points="112.4593,-128.4903 103.9661,-122.1566 106.6558,-132.4043 112.4593,-128.4903"/>
+<text text-anchor="middle" x="99.1943" y="-142.497" font-family="Times,serif" font-size="14.00" fill="#000000">True</text>
+</g>
+<!-- 2 -->
+<g id="node5" class="node">
+<title>2</title>
+<polygon fill="#e58139" fill-opacity="0.815686" stroke="#000000" points="252.226,-122 155.774,-122 155.774,-72 252.226,-72 252.226,-122"/>
+<text text-anchor="middle" x="204" y="-106.8" font-family="Times,serif" font-size="14.00" fill="#000000">X[1] &lt;= 0.938</text>
+<text text-anchor="middle" x="204" y="-92.8" font-family="Times,serif" font-size="14.00" fill="#000000">29</text>
+<text text-anchor="middle" x="204" y="-78.8" font-family="Times,serif" font-size="14.00" fill="#000000">[38, 7]</text>
+</g>
+<!-- 0&#45;&gt;2 -->
+<g id="edge4" class="edge">
+<title>0&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M162.3828,-157.6623C168.2044,-149.1767 174.7879,-139.5803 180.9723,-130.5658"/>
+<polygon fill="#000000" stroke="#000000" points="183.9703,-132.3826 186.7414,-122.1566 178.1981,-128.4226 183.9703,-132.3826"/>
+<text text-anchor="middle" x="191.3179" y="-142.5341" font-family="Times,serif" font-size="14.00" fill="#000000">False</text>
+</g>
+<!-- 3 -->
+<g id="node3" class="node">
+<title>3</title>
+<polygon fill="#e58139" stroke="#000000" points="54,-36 0,-36 0,0 54,0 54,-36"/>
+<text text-anchor="middle" x="27" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">3</text>
+<text text-anchor="middle" x="27" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[3, 0]</text>
+</g>
+<!-- 1&#45;&gt;3 -->
+<g id="edge2" class="edge">
+<title>1&#45;&gt;3</title>
+<path fill="none" stroke="#000000" d="M67.6854,-71.5691C61.0394,-62.8185 53.5886,-53.0083 46.8971,-44.1978"/>
+<polygon fill="#000000" stroke="#000000" points="49.6008,-41.9709 40.7652,-36.1242 44.0263,-46.2047 49.6008,-41.9709"/>
+</g>
+<!-- 4 -->
+<g id="node4" class="node">
+<title>4</title>
+<polygon fill="#399de5" fill-opacity="0.894118" stroke="#000000" points="126,-36 72,-36 72,0 126,0 126,-36"/>
+<text text-anchor="middle" x="99" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">33</text>
+<text text-anchor="middle" x="99" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[5, 47]</text>
+</g>
+<!-- 1&#45;&gt;4 -->
+<g id="edge3" class="edge">
+<title>1&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M90.8629,-71.5691C92.0962,-63.45 93.468,-54.4187 94.7286,-46.1201"/>
+<polygon fill="#000000" stroke="#000000" points="98.2054,-46.5364 96.247,-36.1242 91.2848,-45.4851 98.2054,-46.5364"/>
+</g>
+<!-- 5 -->
+<g id="node6" class="node">
+<title>5</title>
+<polygon fill="#e58139" fill-opacity="0.721569" stroke="#000000" points="220,-36 166,-36 166,0 220,0 220,-36"/>
+<text text-anchor="middle" x="193" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">22</text>
+<text text-anchor="middle" x="193" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[25, 7]</text>
+</g>
+<!-- 2&#45;&gt;5 -->
+<g id="edge5" class="edge">
+<title>2&#45;&gt;5</title>
+<path fill="none" stroke="#000000" d="M200.459,-71.5691C199.3285,-63.45 198.071,-54.4187 196.9155,-46.1201"/>
+<polygon fill="#000000" stroke="#000000" points="200.3694,-45.5459 195.5236,-36.1242 193.4363,-46.5114 200.3694,-45.5459"/>
+</g>
+<!-- 6 -->
+<g id="node7" class="node">
+<title>6</title>
+<polygon fill="#e58139" stroke="#000000" points="292,-36 238,-36 238,0 292,0 292,-36"/>
+<text text-anchor="middle" x="265" y="-20.8" font-family="Times,serif" font-size="14.00" fill="#000000">7</text>
+<text text-anchor="middle" x="265" y="-6.8" font-family="Times,serif" font-size="14.00" fill="#000000">[13, 0]</text>
+</g>
+<!-- 2&#45;&gt;6 -->
+<g id="edge6" class="edge">
+<title>2&#45;&gt;6</title>
+<path fill="none" stroke="#000000" d="M223.6366,-71.5691C230.3933,-62.8185 237.9682,-53.0083 244.7713,-44.1978"/>
+<polygon fill="#000000" stroke="#000000" points="247.664,-46.1784 251.0054,-36.1242 242.1234,-41.9002 247.664,-46.1784"/>
+</g>
+</g>
+</svg>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tree1</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tree2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tree3</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">forest</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[1.]
+[0.]
+[0.]
+[0]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Classification"><strong>Classification</strong><a class="anchor-link" href="#Classification">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Python version: 3.6.4
+Universe has been successfully imported.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Logistic-Regression">Logistic Regression<a class="anchor-link" href="#Logistic-Regression">&#182;</a></h2><p><a href="http://scikit-learn.org/stable/modules/linear_model.html#logistic-regression">Scikit-learn Documentation on Logistic Regression</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Odds-Ratio">Odds Ratio<a class="anchor-link" href="#Odds-Ratio">&#182;</a></h3><p>$$ Odds=\frac{p}{1-p}$$</p>
+<p>$$ p=\frac{Odds}{1+Odds} $$</p>
+<p>Assume that probability is in $(0, 1)$ range, excluding 0 and 1.</p>
+<p>=&gt; Odds Ratio is in $(0,+\infty)$ range.</p>
+<p>=&gt; Logarithm of Odds Ratio is in $(-\infty, +\infty)$ range.</p>
+<p>Logit function is defined as logarithm of odds ratio.
+We model it with a linear combination:</p>
+<p>$$ \operatorname{logit}(p)=\ln\left(\frac{p}{1-p}\right) = w_1 x_{1} + \cdots + w_k x_{k} + b$$</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Logit.svg/350px-Logit.svg.png" alt=""></p>
+<p>We can compute the probability back from its logit. This is called <strong>Logistic Function</strong>:</p>
+<p>$$ p
+=\frac{e^{\operatorname{logit}(p)}}{1+e^{\operatorname{logit}(p)}}
+=\frac{1}{1+e^{-\operatorname{logit}(p)}} 
+=\frac{1}{1+e^{-(w_1 x_{1} + \cdots + w_k x_{k} + c)}} $$</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Logistic-curve.svg/320px-Logistic-curve.svg.png" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Cost-Function">Cost Function<a class="anchor-link" href="#Cost-Function">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>L2 Regularization:</p>
+<p>$$\underset{w, c}{min\,} \frac{1}{2}\left(w_1^2+\cdots+w_k^2\right) + C \sum_{i=1}^n \ln\left(1 + e^{- y_i (w_1 x_{i,1} + \cdots + w_k x_{i,k} + c)} \right)$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Binary-Classification">Binary Classification<a class="anchor-link" href="#Binary-Classification">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Confusion-Matrix">Confusion Matrix<a class="anchor-link" href="#Confusion-Matrix">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"> </div>
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_274_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="https://user-images.githubusercontent.com/1645996/56054129-405e4000-5d56-11e9-94e3-8ef20d7c7f53.jpg" alt="Scanned Documents 1"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Beyond-Accuracy">Beyond Accuracy<a class="anchor-link" href="#Beyond-Accuracy">&#182;</a></h3><p>Consider a test that can be positive or negative. This test tells you if somebody is drug user or not.</p>
+<p><strong>Accuracy</strong> -- how often we get correct result (doesn't matter if it's negative or positive)?</p>
+<p>$$Accuracy = \frac{TP + TN}{TP + TN + FP + FN}$$</p>
+<p><strong>Precision, positive predictive value (PPV)</strong> -- when test is positive, how likely it's that one is drug user?</p>
+<p>$$Precision = \frac{TP}{TP + FP}$$</p>
+<p><strong>Recall, sensitivity, hit rate, true positive rate (TPR)</strong> -- when one is drug user, how likely it is that the test will detect it, that is it's positive?
+$$Recall = \frac{TP}{TP + FN}$$</p>
+<p><strong>$F_1$-score</strong> -- a metric combining both Precision and Recall.</p>
+<p>$$F = 2 \cdot \frac{precision \cdot recall}{precision + recall} = \frac{2}{\frac{1}{precision}+\frac{1}{recall}}$$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Polish names:</p>
+<ul>
+<li>Accuracy = dokładność</li>
+<li>Precision = precyzja </li>
+<li>Recall = czułość</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Precision-Recall-Curve">Precision-Recall Curve<a class="anchor-link" href="#Precision-Recall-Curve">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># Load Data and Split It</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mglearn_make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="p">(</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="n">centers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                          <span class="n">random_state</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Build And Train Model</span>
+<span class="n">svc</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">gamma</span><span class="o">=.</span><span class="mi">05</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Compute Precision-Recall Curve</span>
+<span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">precision_recall_curve</span><span class="p">(</span>
+    <span class="n">y_test</span><span class="p">,</span> <span class="n">svc</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+
+<span class="c1"># Find threshold closest to zero</span>
+<span class="n">close_zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">thresholds</span><span class="p">))</span>
+
+<span class="c1"># Plot Precision-Recall Curve</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">precision</span><span class="p">[</span><span class="n">close_zero</span><span class="p">],</span> <span class="n">recall</span><span class="p">[</span><span class="n">close_zero</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s2">&quot;threshold zero&quot;</span><span class="p">,</span> <span class="n">fillstyle</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;precision recall curve&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Precision&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Recall&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="2020-02-20-ml_files/2020-02-20-ml_279_0.png"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Usage-with-Grid-Search">Usage with Grid Search<a class="anchor-link" href="#Usage-with-Grid-Search">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">pipeline</span><span class="p">,</span>
+    <span class="n">param_grid</span><span class="p">,</span> 
+    <span class="n">cv</span><span class="o">=</span><span class="n">KFold</span><span class="p">(</span><span class="n">n_split</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="n">refit</span><span class="o">=</span><span class="s1">&#39;f1_score&#39;</span><span class="p">,</span>
+    <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">iid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+</div>
 </div>
 </div>
 
