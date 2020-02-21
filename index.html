@@ -11880,10 +11880,10 @@ $( document ).ready(function(){
 
 
 
-<div id="ce14866a-dd93-41da-a273-87738b27756b"></div>
+<div id="99bfb037-b1de-4273-9e73-1bc4e0b059e4"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#ce14866a-dd93-41da-a273-87738b27756b');
+var element = $('#99bfb037-b1de-4273-9e73-1bc4e0b059e4');
 require(['mycustomization'], function (mycustomization) {});  // loads mycustomization.js
 </script>
 </div>
@@ -15108,6 +15108,73 @@ Test score:  0.296
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Pipelines">Pipelines<a class="anchor-link" href="#Pipelines">&#182;</a></h2><p>Refactor your code: put the model in a pipeline and evaluate the entire pipeline.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Solution</span>
+<span class="kn">from</span> <span class="nn">universe</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># Load Data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;regression-lab-data-noisy.csv&#39;</span><span class="p">)</span>
+<span class="n">original_featureset</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">original_featureset</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Fit Model</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">()),</span>
+<span class="p">])</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Evaluate Model</span>
+<span class="n">train_score</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">test_score</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="c1"># Print Results</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;INTERCEPT: </span><span class="si">{pipeline.named_steps[&#39;model&#39;].intercept_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;COEFFICIENTS: </span><span class="si">{pipeline.named_steps[&#39;model&#39;].coef_}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Train score: </span><span class="si">{train_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Test score:  </span><span class="si">{test_score:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>INTERCEPT: 3.0336789008316187
+COEFFICIENTS: [-1.07026663 -1.5446259   0.97608909]
+Train score: 0.383
+Test score:  0.296
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Feature-Engineering-&amp;-Selection"><strong>Feature Engineering &amp; Selection</strong><a class="anchor-link" href="#Feature-Engineering-&amp;-Selection">&#182;</a></h1>
 </div>
 </div>
@@ -15208,6 +15275,17 @@ Universe has been successfully imported.
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Hidden Cell -- just to make the usage working</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">]]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -15217,7 +15295,7 @@ Universe has been successfully imported.
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
     <span class="c1"># Any number of transformers</span>
-<span class="c1">#     (&#39;poly&#39;, PolynomialFeatures()),  # example transformer</span>
+    <span class="c1"># (&#39;poly&#39;, PolynomialFeatures()),  # example transformer</span>
     <span class="c1"># and then a model at the end of the pipeline </span>
     <span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">()),</span>
 <span class="p">])</span>
@@ -15815,7 +15893,7 @@ Train score: 1.000
 
 
 <div class="output_png output_subarea ">
-<img src="2020-02-20-ml_files/2020-02-20-ml_171_0.png"
+<img src="2020-02-20-ml_files/2020-02-20-ml_173_0.png"
 >
 </div>
 
@@ -15941,7 +16019,7 @@ Train score: 1.000
 
 
 <div class="output_png output_subarea ">
-<img src="2020-02-20-ml_files/2020-02-20-ml_176_0.png"
+<img src="2020-02-20-ml_files/2020-02-20-ml_178_0.png"
 >
 </div>
 
